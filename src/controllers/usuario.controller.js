@@ -132,15 +132,17 @@ export const usuario = {
                 });
                 return;
             } else {
-                const [rows] = await connection.query("SELECT * FROM usuario WHERE usuario_correo=?", [correo]);
-                const user = rows[0];
-                if (!user) {
+                try {
+                    const [rows] = await connection.query("SELECT * FROM usuario WHERE usuario_correo=?", [correo]);
+                } catch (error) {
                     res.json({
                         status: "FAILED",
-                        message: "El usuario no existe"
+                        message: "El correo ingresado no existe"
                     });
                     return;
                 }
+                const user = rows[0];
+
                 const validPassword = await bcrypt.compare(clave, user.usuario_clave);
                 if (!validPassword) {
                     res.json({
