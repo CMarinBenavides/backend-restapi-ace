@@ -132,15 +132,7 @@ export const usuario = {
                 });
                 return;
             } else {
-                try {
-                    const [rows] = await connection.query("SELECT * FROM usuario WHERE usuario_correo=?", [correo]);
-                } catch (error) {
-                    res.json({
-                        status: "FAILED",
-                        message: "El correo ingresado no existe"
-                    });
-                    return;
-                }
+                const [rows] = await connection.query("SELECT * FROM usuario WHERE usuario_correo=?", [correo]);
                 const user = rows[0];
 
                 const validPassword = await bcrypt.compare(clave, user.usuario_clave);
@@ -177,9 +169,9 @@ export const usuario = {
 
             }
         } catch (error) {
-            return res.status(500).json({
+            return res.json({
                 status: 'FAILED',
-                message: 'Algo salio mal :( ',
+                message: 'El correo o la contraseña son incorrectos',
             });
         }
     },
