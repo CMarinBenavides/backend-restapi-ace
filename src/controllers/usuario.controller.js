@@ -134,6 +134,13 @@ export const usuario = {
             } else {
                 const [rows] = await connection.query("SELECT * FROM usuario WHERE usuario_correo=?", [correo]);
                 const user = rows[0];
+                if (!user) {
+                    res.json({
+                        status: "FAILED",
+                        message: "El usuario no existe"
+                    });
+                    return;
+                }
                 const validPassword = await bcrypt.compare(clave, user.usuario_clave);
                 if (!validPassword) {
                     res.json({
