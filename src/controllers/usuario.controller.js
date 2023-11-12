@@ -126,7 +126,7 @@ export const usuario = {
         try {
             const { correo, clave } = req.body;
             if (correo == null || clave == null) {
-                res.status(400).json({
+                res.json({
                     status: "FAILED",
                     message: "Todos los campos son obligatorios"
                 });
@@ -136,7 +136,7 @@ export const usuario = {
                 const user = rows[0];
                 const validPassword = await bcrypt.compare(clave, user.usuario_clave);
                 if (!validPassword) {
-                    res.status(400).json({
+                    res.json({
                         status: "FAILED",
                         message: "La contraseña es incorrecta"
                     });
@@ -158,7 +158,7 @@ export const usuario = {
                     }
                 });
                 if (rows.length <= 0) {
-                    res.status(400).json({
+                    res.json({
                         status: "FAILED",
                         message: "El usuario no existe"
                     });
@@ -169,6 +169,7 @@ export const usuario = {
             }
         } catch (error) {
             return res.status(500).json({
+                status: 'FAILED',
                 message: 'Algo salio mal :( ',
             });
         }
