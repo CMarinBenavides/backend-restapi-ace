@@ -1,6 +1,6 @@
 import express from 'express';
 import usuariosRoutes from './routes/usuario.routes.js';
-
+import { PORT } from './config/config.js';
 const app = express();
 
 app.use(express.json());
@@ -12,6 +12,6 @@ app.use((req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Servidor escuchando en el puerto 3000');
+app.listen(PORT, () => {
+    console.log('Servidor escuchando en el puerto ', PORT);
 });

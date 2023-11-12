@@ -1,7 +1,8 @@
-import dotenv from 'dotenv'
+
 import { createPool } from 'mysql2/promise'
 
-dotenv.config()
+import { MYSQL_URL } from './config.js'
+
 export const connection = createPool(
-    process.env.MYSQL_URL
+    MYSQL_URL
 )
