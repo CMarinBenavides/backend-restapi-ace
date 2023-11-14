@@ -1,4 +1,4 @@
-import { connection } from "../../config/db.js";
+import { connection } from "../config/db.js";
 
 export const solicitud = {
     //este metodo es para obtener todas las solicitudes
@@ -23,14 +23,14 @@ export const solicitud = {
 
     //este metodo es crear una solicitud
     postSolicitud: async (req, res) => {
+        const fecha = new Date(req.body.fecha);
+        const fechaAtencion = new Date(req.body.fechaAtencion);
         const [result] = await connection
-            .query("INSERT INTO solicitud(solicitud_estado,solicitud_fecha,solicitud_tipo,solicitud_descripcion,solicitud_usuario_id) values(?,?,?,?,?)",
+            .query("INSERT INTO solicitud(solicitud_estado,solicitud_fecha,solicitud_fecha_atencion) values(?,?,?)",
                 [
                     req.body.estado,
-                    req.body.fecha,
-                    req.body.tipo,
-                    req.body.descripcion,
-                    req.body.usuario_id
+                    fecha,
+                    fechaAtencion
                 ]);
         res.json({
             id: result.insertId,

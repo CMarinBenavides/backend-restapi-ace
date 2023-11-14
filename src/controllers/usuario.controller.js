@@ -40,39 +40,69 @@ export const usuario = {
     postSignupUsuario: async (req, res) => {
         try {
             if (req.body.nombres == null || req.body.apellidos == null || req.body.tipo_identificacion == null || req.body.numero_identificacion == null || req.body.fecha_cumple == null || req.body.correo == null || req.body.telefono == null || req.body.clave == null) {
-                res.status(400).json({ message: "Todos los campos son obligatorios" });
+                res.json({
+                    status: "FAILED",
+                    message: "Todos los campos son obligatorios"
+                });
                 return;
             } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(req.body.nombres)) {
-                res.status(400).json({ message: "El nombre solo puede contener letras y espacios" });
+                res.json({
+                    status: "FAILED",
+                    message: "El nombre solo puede contener letras y espacios"
+                });
                 return;
             } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(req.body.apellidos)) {
-                res.status(400).json({ message: "El apellido solo puede contener letras y espacios" });
+                res.json({
+                    status: "FAILED",
+                    message: "El apellido solo puede contener letras y espacios"
+                });
                 return;
             } else if (!/^[0-9]{5,10}$/.test(req.body.numero_identificacion)) {
-                res.status(400).json({ message: "El numero de identificacion solo puede contener numeros y debe tener 10 digitos" });
+                res.json({
+                    status: "FAILED",
+                    message: "El numero de identificacion solo puede contener numeros y debe tener 10 digitos"
+                });
                 return;
             } else if (!/^[a-zA-ZÀ-ÿ\s]{1,40}$/.test(req.body.tipo_identificacion)) {
-                res.status(400).json({ message: "El tipo de identificacion solo puede contener letras" });
+                res.json({
+                    status: 'FAILED',
+                    message: "El tipo de identificacion solo puede contener letras"
+                });
                 return;
             } else if (!new Date(req.body.fecha_cumple).getTime()) {
-                res.status(400).json({ message: "La fecha de cumpleaños no es valida" });
+                res.json({
+                    status: "FAILED",
+                    message: "La fecha de cumpleaños no es valida"
+                });
                 return;
             } else if (!/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(req.body.correo)) {
-                res.status(400).json({ message: "No esta en formato de correo" });
+                res.json({
+                    status: "FAILED",
+                    message: "No esta en formato de correo"
+                });
                 return;
             } else if (!/^[0-9]{10}$/.test(req.body.telefono)) {
-                res.status(400).json({ message: "El numero de telefono solo puede contener numeros y debe tener 10 digitos" });
+                res.json({
+                    status: "FAILED",
+                    message: "El numero de telefono solo puede contener numeros y debe tener 10 digitos"
+                });
                 return;
             } else if (!/^[a-zA-Z0-9]{8,16}$/.test(req.body.clave)) {
-                res.status(400).json({ message: "La clave solo puede contener letras y numeros y debe tener entre 8 y 16 caracteres" });
+                res.json({
+                    status: "FAILED",
+                    message: "La clave solo puede contener letras y numeros y debe tener entre 8 y 16 caracteres"
+                });
                 return;
             } else if (req.body.clave != req.body.confirmar_clave) {
-                res.status(400).json({ message: "Las claves no coinciden" });
+                res.json({
+                    status: "FAILED",
+                    message: "Las claves no coinciden"
+                });
                 return;
             } else {
                 const [rows] = await connection.query("SELECT * FROM usuario WHERE usuario_numero_identificacion=?", [req.body.numero_identificacion]);
                 if (rows.length > 0) {
-                    res.status(400).json({
+                    res.json({
                         status: "FAILED",
                         message: "El usuario ya existe"
                     });
@@ -83,8 +113,8 @@ export const usuario = {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(req.body.clave, salt)
                 .catch(error => {
-                    return res.status(500).json({
-                        status: 500,
+                    return res.json({
+                        status: "FAILED",
                         message: 'Algo salio mal al momento de encriptar la contraseña :(',
                     });
                 });
@@ -115,7 +145,8 @@ export const usuario = {
                 }
             });
         } catch (error) {
-            return res.status(500).json({
+            return res.json({
+                status: 'FAILED',
                 message: 'Algo salio mal :( ',
             });
         }
